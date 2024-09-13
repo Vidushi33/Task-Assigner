@@ -56,7 +56,8 @@ const Navbar = ({ isAdmin = false }: IProps) => {
     console.log(token);
     try {
       const res = await axios.post(
-        `https://task-manager-zrno.onrender.com/tasks/mark-read/${id}`, {},
+        `https://task-manager-zrno.onrender.com/tasks/mark-read/${id}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,24 +70,39 @@ const Navbar = ({ isAdmin = false }: IProps) => {
       console.log(error);
     }
   };
+  const handleLogout = () => {
+    localStorage.removeItem("AUTH_TOKEN");
+    router.refresh();
+  };
 
+  setInterval(() => {
+    handleLogout();
+    window.location.reload();
+  }, 1800000);
   return (
     <div className="flex justify-between py-4 px-6 bg-white">
       <div className="flex gap-7">
         <h1 className="text-3xl font-biold text-black">TASK MANAGER</h1>
       </div>
 
-      {!isAdmin && (
-        <div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-[#0B5ED7] text-white py-2 rounded-md w-44 mx-auto font-semibold"
-          >
-            View Notification
-          </button>
-        </div>
-      )}
-
+      <div className="flex gap-2">
+        {!isAdmin && (
+          <div>
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-[#0B5ED7] text-white py-2 rounded-md w-44 mx-auto font-semibold"
+            >
+              View Notification
+            </button>
+          </div>
+        )}
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white py-2 rounded-md w-32  mx-auto font-semibold"
+        >
+          Logout
+        </button>
+      </div>
       {showModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
